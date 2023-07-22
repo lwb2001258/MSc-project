@@ -25,7 +25,6 @@ test_models
 result
 pyCheckmol
 ifg
-data
 docs
 stastics
 tox21_checkpoints

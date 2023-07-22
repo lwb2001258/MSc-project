@@ -498,6 +498,11 @@ class TrainArgs(CommonArgs):
     (only relevant for number_of_molecules > 1, where checkpoint model has number_of_molecules = 1)
     """
 
+    mol_attrbute_param: str = ""
+    """
+    this param will determine the method to generate the mol_attr feature
+    """
+
     def __init__(self, *args, **kwargs) -> None:
         super(TrainArgs, self).__init__(*args, **kwargs)
         self._task_names = None

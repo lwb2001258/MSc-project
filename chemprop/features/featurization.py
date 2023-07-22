@@ -269,15 +269,19 @@ def bond_features(bond: Chem.rdchem.Bond) -> List[Union[bool, int, float]]:
     return fbond
 
 
-def molecule_features(mol: Chem.Mol):
-    # smi = Chem.MolToSmiles(mol)
-    # cm = CheckMol()
-    # a_sbitvector = cm.functionalGroupASbitvector(smi)
-    # return a_sbitvector
-    maccskeys = MACCSkeys.GenMACCSKeys(mol)
-    fp_list = list(maccskeys.ToBitString())
-    fp_list = list(map(lambda x: int(x), fp_list))
-    return fp_list
+def molecule_features(mol: Chem.Mol, mol_attrbute_param: str):
+    if mol_attrbute_param == 'pyCheckmol':
+        smi = Chem.MolToSmiles(mol)
+        cm = CheckMol()
+        a_sbitvector = cm.functionalGroupASbitvector(smi)
+        return a_sbitvector
+    elif mol_attrbute_param == 'MACCSkeys':
+        maccskeys = MACCSkeys.GenMACCSKeys(mol)
+        fp_list = list(maccskeys.ToBitString())
+        fp_list = list(map(lambda x: int(x), fp_list))
+        return fp_list
+    else:
+        return None
 
 
 def map_reac_to_prod(mol_reac: Chem.Mol, mol_prod: Chem.Mol):
@@ -340,7 +344,9 @@ class MolGraph:
                  atom_features_extra: np.ndarray = None,
                  bond_features_extra: np.ndarray = None,
                  overwrite_default_atom_features: bool = False,
-                 overwrite_default_bond_features: bool = False):
+                 overwrite_default_bond_features: bool = False,
+                 mol_attrbute_param: str = ""
+                 ):
         """
         :param mol: A SMILES or an RDKit molecule.
         :param atom_features_extra: A list of 2D numpy array containing additional atom features to featurize the molecule.
@@ -547,10 +553,12 @@ class MolGraph:
         self.x = self.f_atoms
         self.edge_attr = self.f_bonds
         try:
-            self.mol_attr = molecule_features(mol)
+            self.mol_attr = molecule_features(mol,mol_attrbute_param)
         except Exception as e:
-            # self.mol_attr = [0]*205
-            self.mol_attr = [0]*167
+            if mol_attrbute_param == "pyCheckmol":
+                self.mol_attr = [0]*205
+            elif mol_attrbute_param == "MACCSkeys":
+                self.mol_attr = [0]*167
             smiles2 = Chem.MolToSmiles(mol)
             f.write(smiles2 +"\n")
 

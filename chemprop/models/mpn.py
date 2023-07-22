@@ -37,6 +37,7 @@ class MPNEncoder(nn.Module):
         self.aggregation = args.aggregation
         self.aggregation_norm = args.aggregation_norm
         self.is_atom_bond_targets = args.is_atom_bond_targets
+        self.mol_attribute_param = args.mol_attrbute_param
 
         # Dropout
         self.dropout = nn.Dropout(args.dropout)
@@ -59,7 +60,11 @@ class MPNEncoder(nn.Module):
         self.W_h = nn.Linear(w_h_input_size, self.hidden_size, bias=self.bias)
 
         self.W_o = nn.Linear(self.atom_fdim + self.hidden_size, self.hidden_size)
-        self.W_m_o = nn.Linear(167 + self.hidden_size, self.hidden_size)
+
+        if args.mol_attrbute_param == 'MACCSkeys':
+            self.W_m_o = nn.Linear(167 + self.hidden_size, self.hidden_size)
+        elif args.mol_attrbute_param == 'pyCheckmol':
+            self.W_m_o = nn.Linear(205 + self.hidden_size, self.hidden_size)
 
 
         if self.is_atom_bond_targets:
@@ -190,8 +195,10 @@ class MPNEncoder(nn.Module):
                     mol_vec = mol_vec.sum(dim=0)
                 elif self.aggregation == 'norm':
                     mol_vec = mol_vec.sum(dim=0) / self.aggregation_norm
-                mol_vec = torch.cat([mol_vec, mol_attrs[i]])  # num_atoms x (atom_fdim + hidden)
-                mol_vec = self.act_func(self.W_m_o(mol_vec))  # num_atoms x hidden
+
+                if self.mol_attribute_param:
+                    mol_vec = torch.cat([mol_vec, mol_attrs[i]])  # num_atoms x (atom_fdim + hidden)
+                    mol_vec = self.act_func(self.W_m_o(mol_vec))  # num_atoms x hidden
                 # mol_vec = self.dropout(mol_hiddens)  # num_atoms x hidden
                 mol_vecs.append(mol_vec)
 
