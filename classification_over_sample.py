@@ -69,7 +69,7 @@ random.shuffle(X)
 for index, smiles in enumerate(X):
     f.write(smiles+","+str(smiles_info.get(smiles))+"\n")
 
-with open('mmc2.txt') as f:
+with open('literature_predict_result.txt') as f:
     content = f.readlines()
 pred_info={}
 for line in content:
