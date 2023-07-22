@@ -15,3 +15,6 @@ def smilestoMolGraph(smiles):
 smiles = "C1CCCCC1"
 graph = smilestoMolGraph(smiles)
 time.sleep(10000)
+
+
+
