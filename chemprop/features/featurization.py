@@ -269,13 +269,13 @@ def bond_features(bond: Chem.rdchem.Bond) -> List[Union[bool, int, float]]:
     return fbond
 
 
-def molecule_features(mol: Chem.Mol, mol_attrbute_param: str):
-    if mol_attrbute_param == 'pyCheckmol':
+def molecule_features(mol: Chem.Mol, mol_attribute_param: str):
+    if mol_attribute_param == 'pyCheckmol':
         smi = Chem.MolToSmiles(mol)
         cm = CheckMol()
         a_sbitvector = cm.functionalGroupASbitvector(smi)
         return a_sbitvector
-    elif mol_attrbute_param == 'MACCSkeys':
+    elif mol_attribute_param == 'MACCSkeys':
         maccskeys = MACCSkeys.GenMACCSKeys(mol)
         fp_list = list(maccskeys.ToBitString())
         fp_list = list(map(lambda x: int(x), fp_list))
@@ -345,7 +345,7 @@ class MolGraph:
                  bond_features_extra: np.ndarray = None,
                  overwrite_default_atom_features: bool = False,
                  overwrite_default_bond_features: bool = False,
-                 mol_attrbute_param: str = ""
+                 mol_attribute_param: str = ""
                  ):
         """
         :param mol: A SMILES or an RDKit molecule.
@@ -553,11 +553,11 @@ class MolGraph:
         self.x = self.f_atoms
         self.edge_attr = self.f_bonds
         try:
-            self.mol_attr = molecule_features(mol,mol_attrbute_param)
+            self.mol_attr = molecule_features(mol,mol_attribute_param)
         except Exception as e:
-            if mol_attrbute_param == "pyCheckmol":
+            if mol_attribute_param == "pyCheckmol":
                 self.mol_attr = [0]*205
-            elif mol_attrbute_param == "MACCSkeys":
+            elif mol_attribute_param == "MACCSkeys":
                 self.mol_attr = [0]*167
             smiles2 = Chem.MolToSmiles(mol)
             f.write(smiles2 +"\n")
@@ -631,7 +631,10 @@ class BatchMolGraph:
 
         self.f_atoms = torch.tensor(f_atoms, dtype=torch.float)
         self.f_bonds = torch.tensor(f_bonds, dtype=torch.float)
-        self.mol_attrs = torch.tensor(np.array(mol_attrs), dtype=torch.float)
+        if None not in mol_attrs:
+            self.mol_attrs = torch.tensor(np.array(mol_attrs), dtype=torch.float)
+        else:
+            self.mol_attrs = None
         self.a2b = torch.tensor([a2b[a] + [0] * (self.max_num_bonds - len(a2b[a])) for a in range(self.n_atoms)], dtype=torch.long)
         self.b2a = torch.tensor(b2a, dtype=torch.long)
         self.b2revb = torch.tensor(b2revb, dtype=torch.long)

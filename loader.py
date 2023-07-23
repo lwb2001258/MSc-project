@@ -69,7 +69,7 @@ def get_dataset(path):
 #         return self
 
 
-# data_list = get_dataset(path="data/cell_classification3.csv")
+# data_list = get_dataset(path="data/antimicrobial_oversampling_data.csv")
 # model =Net(150,2)
 #
 #

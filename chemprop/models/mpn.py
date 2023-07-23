@@ -98,8 +98,11 @@ class MPNEncoder(nn.Module):
             atom_descriptors_batch = torch.from_numpy(np.concatenate(atom_descriptors_batch, axis=0)).float().to(self.device)
 
         f_atoms, f_bonds, a2b, b2a, b2revb, a_scope, b_scope, mol_attrs = mol_graph.get_components(atom_messages=self.atom_messages)
-        f_atoms, f_bonds, a2b, b2a, b2revb,mol_attrs = f_atoms.to(self.device), f_bonds.to(self.device), a2b.to(self.device), b2a.to(self.device), b2revb.to(self.device), mol_attrs.to(self.device)
-
+        if mol_attrs:
+            f_atoms, f_bonds, a2b, b2a, b2revb,mol_attrs = f_atoms.to(self.device), f_bonds.to(self.device), a2b.to(self.device), b2a.to(self.device), b2revb.to(self.device), mol_attrs.to(self.device)
+        else:
+            f_atoms, f_bonds, a2b, b2a, b2revb = f_atoms.to(self.device), f_bonds.to(self.device), a2b.to(
+                self.device), b2a.to(self.device), b2revb.to(self.device)
 
         if self.is_atom_bond_targets:
             b2br = mol_graph.get_b2br().to(self.device)

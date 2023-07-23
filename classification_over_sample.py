@@ -31,20 +31,17 @@ import numpy as np
 from imblearn.over_sampling import *
 
 
-pd_read_csv = pd.read_csv("data/cell_classification.csv")
-print(type(pd_read_csv))
+pd_read_csv = pd.read_csv("data/antimicrobial_data.csv")
 a = pd_read_csv["SMILES"].tolist()
 x = []
 for item in a:
     x.append([item])
-
 b = np.array(x)
-
 c = pd_read_csv['active'].to_numpy()
 ros = RandomOverSampler(random_state=0)
 X_resampled, y_resampled =ros.fit_resample(b,c)
 X = X_resampled.reshape(1,len(X_resampled))[0]
-with open("data/cell_classification.csv") as f:
+with open("data/antimicrobial_data.csv") as f:
     content = f.readlines()
 smiles_info ={}
 for index,line in enumerate(content):
@@ -52,30 +49,13 @@ for index,line in enumerate(content):
         smiles = line.strip().split(',')[0]
         active = int(line.strip().split(',')[1])
         smiles_info[smiles] = active
-
-
-
 Y = y_resampled.reshape(1,len(y_resampled))[0]
-print(Y)
-# pd.DataFrame({'SMILES': X})
-#
-# df = pd.concat([pd.DataFrame({'SMILES': X}), pd.DataFrame({'active':Y})], axis=1)
-#
-# df.to_csv("data/cell_classification3.csv")
-f = open("data/cell_classification3.csv" ,'w')
+f = open("data/antimicrobial_oversampling_data.csv", 'w')
 f.write("SMILES,active\n")
 X = list(X)
 random.shuffle(X)
 for index, smiles in enumerate(X):
     f.write(smiles+","+str(smiles_info.get(smiles))+"\n")
-
-with open('literature_predict_result.txt') as f:
-    content = f.readlines()
-pred_info={}
-for line in content:
-    smiles = line.strip().split("\t")[0]
-    score = line.strip().split("\t")[1]
-    pred_info[smiles] = float(score)
 
 
 

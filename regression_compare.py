@@ -1,7 +1,7 @@
 import os
 import chemprop
 if __name__ == "__main__":
-    # with open('mmc2.txt') as f:
+    # with open('literature_predict_result.txt') as f:
     #     content = f.readlines()
     # pred_info = {}
     # for index, line in enumerate(content):
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     #     f.write("smiles,active\n")
     #     for key in diff_info:
     #         f.write(key+","+str(diff_info.get(key))+"\n")
-    with open('mmc3.txt') as f:
+    with open('literature_mean_inhibition.txt') as f:
         content = f.readlines()
     pred_info = {}
     for index, line in enumerate(content):

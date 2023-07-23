@@ -4,7 +4,7 @@ from chemprop.features import MolGraph
 from rdkit import Chem
 
 
-data = get_data("data/cell_classification3.csv")
+data = get_data("data/antimicrobial_oversampling_data.csv")
 data.targets()
 data.smiles()
 # data = MoleculeDataset([MoleculeDatapoint(["C1CCCCC1"],["1.0"])

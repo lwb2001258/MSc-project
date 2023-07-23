@@ -15,7 +15,7 @@ from rdkit import Chem
 
 
 
-pd_read_csv = pd.read_csv("data/cell_classification.csv")
+pd_read_csv = pd.read_csv("data/antimicrobial_data.csv")
 print(type(pd_read_csv))
 a = pd_read_csv["SMILES"].tolist()
 x = []
