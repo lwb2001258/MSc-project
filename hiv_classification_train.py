@@ -36,7 +36,7 @@ def plot_parity(y_true, y_pred, y_pred_unc=None):
     plt.show()
 
     return
-f = open("test_args/classification_{}.csv".format(str(time.time())),'w')
+f = open("test_args/classification_hiv_{}.csv".format(str(time.time())),'w')
 f.write("epochs,batch_size,depth,hidden_size,activation,dropout,init_lr,final_lr,num_folds,ensemble_size,max_lr,mean_score,std_score\n")
 f.flush()
 def objective(params):
@@ -53,9 +53,9 @@ def objective(params):
     ensemble_size = params.get("ensemble_size")
     max_lr = params.get("max_lr")
     arguments = [
-        '--data_path', 'data/hiv.csv',
+        '--data_path', 'data/enhance_hiv_classification.csv',
         '--dataset_type', 'classification',
-        '--save_dir', 'test_models/hiv/test_checkpoints_reg_{}'.format(time_str),
+        '--save_dir', 'test_models/hiv/test_enhance_checkpoints_reg_{}'.format(time_str),
         '--epochs', str(epochs),
         '--save_smiles_splits',
         '--batch_size', str(batch_size),
@@ -94,7 +94,7 @@ def objective(params):
 
 
 space = {
-    "epochs": hp.choice("epochs", [40]),
+    "epochs": hp.choice("epochs", [30,40]),
     "batch_size": hp.choice("batch_size", [20]),
     "depth": hp.choice("depth", [5,6]),
     "hidden_size": hp.choice("hidden_size",[1600]),

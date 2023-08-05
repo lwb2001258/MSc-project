@@ -30,6 +30,11 @@ stastics
 tox21_checkpoints
 bad_smiles.txt
 chemprop/web/*
+zinc15
+*.png
+*.img
+*.csv
+
 
 
 

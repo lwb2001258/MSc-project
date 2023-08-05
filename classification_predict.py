@@ -47,7 +47,7 @@ if __name__ == "__main__":
         if os.path.isfile(d):
             file_list.append(d)
     for file_path in file_list:
-        file_name_list.append(os.path.basename(file_path).strip(".csv"))
+        file_name_list.append(os.path.basename(file_path).replace(".csv",""))
     check_dirs = []
     rootdir = 'test_models/classification'
     for file in os.listdir(rootdir):
@@ -56,7 +56,8 @@ if __name__ == "__main__":
             check_dirs.append(d)
     for dir in check_dirs:
         file_name = os.path.basename(dir)
-        if file_name not in file_name_list:
+        # if file_name not in file_name_list:
+        if True:
             try:
                 arguments = [
                     '--test_path', 'data/smiles.csv',
