@@ -8,34 +8,7 @@ import time
 from hyperopt import tpe, hp, fmin, STATUS_OK,Trials
 
 
-# def plot_parity(y_true, y_pred, y_pred_unc=None):
-#     axmin = min(min(y_true), min(y_pred)) - 0.1 * (max(y_true) - min(y_true))
-#     axmax = max(max(y_true), max(y_pred)) + 0.1 * (max(y_true) - min(y_true))
-#
-#     mae = mean_absolute_error(y_true, y_pred)
-#     rmse = mean_squared_error(y_true, y_pred, squared=False)
-#
-#     plt.plot([axmin, axmax], [axmin, axmax], '--k')
-#
-#     plt.errorbar(y_true, y_pred, yerr=y_pred_unc, linewidth=0, marker='o', markeredgecolor='w', alpha=1, elinewidth=1)
-#
-#     plt.xlim((axmin, axmax))
-#     plt.ylim((axmin, axmax))
-#
-#     ax = plt.gca()
-#     ax.set_aspect('equal')
-#
-#     at = AnchoredText(
-#         f"MAE = {mae:.2f}\nRMSE = {rmse:.2f}", prop=dict(size=10), frameon=True, loc='upper left')
-#     at.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
-#     ax.add_artist(at)
-#
-#     plt.xlabel('True')
-#     plt.ylabel('Chemprop Predicted')
-#
-#     plt.show()
-#
-#     return
+
 f = open("test_args/classification_literature_data_{}.csv".format(str(time.time())),'w')
 f.write("epochs,batch_size,depth,hidden_size,activation,dropout,init_lr,final_lr,num_folds,ensemble_size,max_lr,mean_score,std_score\n")
 f.flush()
@@ -93,12 +66,12 @@ def objective(params):
 
 
 space = {
-    "epochs": hp.choice("epochs", [30]),
+    "epochs": hp.choice("epochs", [50]),
     "batch_size": hp.choice("batch_size", [20]),
-    "depth": hp.choice("depth", [2,6]),
+    "depth": hp.choice("depth", [2]),
     "hidden_size": hp.choice("hidden_size",[1600]),
     "activation": hp.choice("activation", ["LeakyReLU"]),
-    "dropout": hp.choice("dropout",[0.15,0.35]),
+    "dropout": hp.choice("dropout",[0.15]),
     "init_lr": hp.choice("init_lr",[0.00001]),
     "final_lr": hp.choice("final_lr",[0.000001]),
     "num_folds": hp.choice("num_folds", [10]),

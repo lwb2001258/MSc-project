@@ -65,6 +65,9 @@ class MPNEncoder(nn.Module):
             self.W_m_o = nn.Linear(167 + self.hidden_size, self.hidden_size)
         elif args.mol_attrbute_param == 'pyCheckmol':
             self.W_m_o = nn.Linear(205 + self.hidden_size, self.hidden_size)
+        elif args.mol_attrbute_param == 'RDKFINGERPRINT' or args.mol_attrbute_param == 'morganFingerPrint':
+            self.W_m_o = nn.Linear(2048 + self.hidden_size, self.hidden_size)
+            # self.W_m_o = nn.Linear(200 + self.hidden_size, self.hidden_size)
 
 
         if self.is_atom_bond_targets:
@@ -98,7 +101,7 @@ class MPNEncoder(nn.Module):
             atom_descriptors_batch = torch.from_numpy(np.concatenate(atom_descriptors_batch, axis=0)).float().to(self.device)
 
         f_atoms, f_bonds, a2b, b2a, b2revb, a_scope, b_scope, mol_attrs = mol_graph.get_components(atom_messages=self.atom_messages)
-        if mol_attrs:
+        if mol_attrs is not None:
             f_atoms, f_bonds, a2b, b2a, b2revb,mol_attrs = f_atoms.to(self.device), f_bonds.to(self.device), a2b.to(self.device), b2a.to(self.device), b2revb.to(self.device), mol_attrs.to(self.device)
         else:
             f_atoms, f_bonds, a2b, b2a, b2revb = f_atoms.to(self.device), f_bonds.to(self.device), a2b.to(

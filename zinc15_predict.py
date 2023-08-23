@@ -20,7 +20,7 @@ if __name__ == "__main__":
         content = f.readlines()
     for line in content:
         pred_file_list.append(line.strip())
-    active_file = open('zinc15/actives_predict_infos.txt', 'a+')
+    active_file = open('zinc15/best/actives_predict_infos.csv', 'a+')
     finishe_file = open('zinc15/finished_files.txt', 'a+')
     big_smi_file_list = ['FDED.smi', 'GDAD.smi']
     for smi_file in smiles_file_list:
@@ -29,7 +29,7 @@ if __name__ == "__main__":
         size = os.path.getsize(smiles_dir+smi_file)
         print(size)
         # time.sleep(100000)
-        if size > 10000000:
+        if size > 1000000:
             big_smi_file_list.append(smi_file)
         if smi_file not in pred_file_list and smi_file not in big_smi_file_list:
             print(smi_file)
@@ -37,7 +37,7 @@ if __name__ == "__main__":
                 arguments = [
                     '--test_path', smiles_dir+smi_file,
                     '--preds_path', pred_dir+smi_file,
-                    '--checkpoint_dir', "test_models/classification/test_checkpoints_reg_1688915122.125031",
+                    '--checkpoint_dir', "test_models/classification/best/40/test_checkpoints_reg_literature_data_1692435425.713933_best",
                     '--num_workers', '0'
                 ]
                 args = chemprop.args.PredictArgs().parse_args(arguments)

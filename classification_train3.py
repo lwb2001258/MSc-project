@@ -55,7 +55,7 @@ def objective(params):
     arguments = [
         '--data_path', 'data/enhance_classification.csv',
         '--dataset_type', 'classification',
-        '--save_dir', 'test_models/classification/best/50/test_checkpoints_reg_literature_data_{}_best'.format(time_str),
+        '--save_dir', 'test_models/classification/best/40/test_checkpoints_reg_literature_data_{}_best'.format(time_str),
         '--epochs', str(epochs),
         '--save_smiles_splits',
         '--batch_size', str(batch_size),
@@ -93,12 +93,12 @@ def objective(params):
 
 
 space = {
-    "epochs": hp.choice("epochs", [30]),
+    "epochs": hp.choice("epochs", [40]),
     "batch_size": hp.choice("batch_size", [20]),
-    "depth": hp.choice("depth", [2,6]),
+    "depth": hp.choice("depth", [2]),
     "hidden_size": hp.choice("hidden_size",[1600]),
     "activation": hp.choice("activation", ["LeakyReLU"]),
-    "dropout": hp.choice("dropout",[0.15,0.35]),
+    "dropout": hp.choice("dropout",[0.15]),
     "init_lr": hp.choice("init_lr",[0.00001]),
     "final_lr": hp.choice("final_lr",[0.000001]),
     "num_folds": hp.choice("num_folds", [10]),

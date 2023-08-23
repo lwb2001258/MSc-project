@@ -2,10 +2,11 @@ from typing import List, Tuple, Union
 from itertools import zip_longest
 import logging
 
-from rdkit import Chem
+from rdkit import Chem, DataStructs
 import torch
 import numpy as np
-from rdkit.Chem import MACCSkeys
+from rdkit.Chem import MACCSkeys, AllChem
+from rdkit.Chem import RDKFingerprint
 
 from chemprop.rdkit import make_mol
 from pyCheckmol.pyCheckmol import *
@@ -280,6 +281,15 @@ def molecule_features(mol: Chem.Mol, mol_attribute_param: str):
         fp_list = list(maccskeys.ToBitString())
         fp_list = list(map(lambda x: int(x), fp_list))
         return fp_list
+    elif mol_attribute_param == 'RDKFINGERPRINT':
+        fp_list = list(RDKFingerprint(mol))
+        # fp_list = list(map(lambda x: int(x), fp_list))
+        return fp_list
+    elif mol_attribute_param == 'morganFingerPrint':
+        fp = AllChem.GetMorganFingerprintAsBitVect(mol, 2, nBits=2048)
+        fp_array = np.zeros((1,))
+        DataStructs.ConvertToNumpyArray(fp, fp_array)
+        return list(fp_array)
     else:
         return None
 
@@ -559,6 +569,8 @@ class MolGraph:
                 self.mol_attr = [0]*205
             elif mol_attribute_param == "MACCSkeys":
                 self.mol_attr = [0]*167
+            elif mol_attribute_param == "RDKFINGERPRINT" or mol_attribute_param == "morganFingerPrint":
+                self.mol_attr = [0]*2048
             smiles2 = Chem.MolToSmiles(mol)
             f.write(smiles2 +"\n")
 

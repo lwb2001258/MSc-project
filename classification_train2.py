@@ -8,35 +8,35 @@ import time
 from hyperopt import tpe, hp, fmin, STATUS_OK,Trials
 
 
-def plot_parity(y_true, y_pred, y_pred_unc=None):
-    axmin = min(min(y_true), min(y_pred)) - 0.1 * (max(y_true) - min(y_true))
-    axmax = max(max(y_true), max(y_pred)) + 0.1 * (max(y_true) - min(y_true))
-
-    mae = mean_absolute_error(y_true, y_pred)
-    rmse = mean_squared_error(y_true, y_pred, squared=False)
-
-    plt.plot([axmin, axmax], [axmin, axmax], '--k')
-
-    plt.errorbar(y_true, y_pred, yerr=y_pred_unc, linewidth=0, marker='o', markeredgecolor='w', alpha=1, elinewidth=1)
-
-    plt.xlim((axmin, axmax))
-    plt.ylim((axmin, axmax))
-
-    ax = plt.gca()
-    ax.set_aspect('equal')
-
-    at = AnchoredText(
-        f"MAE = {mae:.2f}\nRMSE = {rmse:.2f}", prop=dict(size=10), frameon=True, loc='upper left')
-    at.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
-    ax.add_artist(at)
-
-    plt.xlabel('True')
-    plt.ylabel('Chemprop Predicted')
-
-    plt.show()
-
-    return
-f = open("test_args/classification_{}.csv".format(str(time.time())),'w')
+# def plot_parity(y_true, y_pred, y_pred_unc=None):
+#     axmin = min(min(y_true), min(y_pred)) - 0.1 * (max(y_true) - min(y_true))
+#     axmax = max(max(y_true), max(y_pred)) + 0.1 * (max(y_true) - min(y_true))
+#
+#     mae = mean_absolute_error(y_true, y_pred)
+#     rmse = mean_squared_error(y_true, y_pred, squared=False)
+#
+#     plt.plot([axmin, axmax], [axmin, axmax], '--k')
+#
+#     plt.errorbar(y_true, y_pred, yerr=y_pred_unc, linewidth=0, marker='o', markeredgecolor='w', alpha=1, elinewidth=1)
+#
+#     plt.xlim((axmin, axmax))
+#     plt.ylim((axmin, axmax))
+#
+#     ax = plt.gca()
+#     ax.set_aspect('equal')
+#
+#     at = AnchoredText(
+#         f"MAE = {mae:.2f}\nRMSE = {rmse:.2f}", prop=dict(size=10), frameon=True, loc='upper left')
+#     at.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
+#     ax.add_artist(at)
+#
+#     plt.xlabel('True')
+#     plt.ylabel('Chemprop Predicted')
+#
+#     plt.show()
+#
+#     return
+f = open("test_args/classification_literature_data_{}.csv".format(str(time.time())),'w')
 f.write("epochs,batch_size,depth,hidden_size,activation,dropout,init_lr,final_lr,num_folds,ensemble_size,max_lr,mean_score,std_score\n")
 f.flush()
 def objective(params):
@@ -53,9 +53,9 @@ def objective(params):
     ensemble_size = params.get("ensemble_size")
     max_lr = params.get("max_lr")
     arguments = [
-        '--data_path', 'data/hiv.csv',
+        '--data_path', 'data/enhance_classification.csv',
         '--dataset_type', 'classification',
-        '--save_dir', 'test_models/hiv/test_checkpoints_reg_{}'.format(time_str),
+        '--save_dir', 'test_models/classification/best/45/test_checkpoints_reg_literature_data_{}_best'.format(time_str),
         '--epochs', str(epochs),
         '--save_smiles_splits',
         '--batch_size', str(batch_size),
@@ -68,7 +68,6 @@ def objective(params):
         '--num_folds', str(num_folds),
         '--ensemble_size', str(ensemble_size),
         '--max_lr', str(max_lr),
-        '--num_workers', '0',
 
     ]
     param_list = []
@@ -94,15 +93,15 @@ def objective(params):
 
 
 space = {
-    "epochs": hp.choice("epochs", [40]),
+    "epochs": hp.choice("epochs", [45]),
     "batch_size": hp.choice("batch_size", [20]),
-    "depth": hp.choice("depth", [5,6]),
+    "depth": hp.choice("depth", [2]),
     "hidden_size": hp.choice("hidden_size",[1600]),
-    "activation": hp.choice("activation", ["LeakyReLU",'ReLU']),
-    "dropout": hp.choice("dropout",[0.20,0.35]),
-    "init_lr": hp.choice("init_lr",[0.0001]),
+    "activation": hp.choice("activation", ["LeakyReLU"]),
+    "dropout": hp.choice("dropout",[0.15]),
+    "init_lr": hp.choice("init_lr",[0.00001]),
     "final_lr": hp.choice("final_lr",[0.000001]),
-    "num_folds": hp.choice("num_folds", [1]),
+    "num_folds": hp.choice("num_folds", [10]),
     "ensemble_size": hp.choice("ensemble_size",[1]),
     "max_lr": hp.choice("max_lr",[0.001]),
 }
@@ -111,7 +110,7 @@ best = fmin(
     fn=objective,#目标函数
     space=space,#搜索空间
     algo=tpe.suggest,#指定搜索算法
-    max_evals=1000,
+    max_evals=40,
     trials=trails
 )
 

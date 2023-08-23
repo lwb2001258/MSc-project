@@ -205,7 +205,19 @@ def save_similar_mols(test_path: str,
 
 
 if __name__ == '__main__':
-    args = Args().parse_args()
+    arguments = [
+        '--test_path', '/Users/user/Downloads/code/study/chemprop/data/zinc15_actives_predict_infos.csv',
+        '--train_path', '/Users/user/Downloads/code/study/chemprop/data/antimicrobial_active_smiles.csv',
+        '--save_path',
+        '/Users/user/Downloads/code/study/chemprop/data/zinc15_actives_similar_neighbours.csv',
+        '--distance_measure', 'tanimoto',
+
+        '--num_neighbors', '5',
+        '--batch_size', '20',
+        '--smiles_column', 'SMILES',
+          ]
+    args = Args().parse_args(arguments)
+
 
     save_similar_mols(
         test_path=args.test_path,
@@ -217,3 +229,7 @@ if __name__ == '__main__':
         batch_size=args.batch_size,
         smiles_column=args.smiles_column,
     )
+    # find_similar_mols_from_file('/Users/user/Downloads/code/study/chemprop/data/smiles_test.csv','/Users/user/Downloads/code/study/chemprop/data/antimicrobial_data.csv','tanimoto',smiles_column='SMILES')
+
+
+
